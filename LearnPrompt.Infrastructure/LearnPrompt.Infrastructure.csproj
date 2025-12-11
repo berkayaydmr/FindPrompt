@@ -8,10 +8,17 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.22"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.22"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22"/>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.22" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.22" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22" />
+	</ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\LearnPrompt.Application\LearnPrompt.Application.csproj" />
+      <ProjectReference Include="..\LearnPrompt.Domain\LearnPrompt.Domain.csproj" />
     </ItemGroup>
+
 </Project>

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Web", "LearnPrompt.Web\LearnPrompt.Web.csproj", "{7D1F4ADC-D71B-4350-A874-95DFF8579890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Infrastructure", "LearnPrompt.Infrastructure\LearnPrompt.Infrastructure.csproj", "{5B5D478E-86DA-4FFE-8D02-6043D6630871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Application", "LearnPrompt.Application\LearnPrompt.Application.csproj", "{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Domain", "LearnPrompt.Domain\LearnPrompt.Domain.csproj", "{8C921C57-C607-419A-88AB-C5E91684BF9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D1F4ADC-D71B-4350-A874-95DFF8579890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D1F4ADC-D71B-4350-A874-95DFF8579890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D1F4ADC-D71B-4350-A874-95DFF8579890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D1F4ADC-D71B-4350-A874-95DFF8579890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B5D478E-86DA-4FFE-8D02-6043D6630871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B5D478E-86DA-4FFE-8D02-6043D6630871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B5D478E-86DA-4FFE-8D02-6043D6630871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B5D478E-86DA-4FFE-8D02-6043D6630871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

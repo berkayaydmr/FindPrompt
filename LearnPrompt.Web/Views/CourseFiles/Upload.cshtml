@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Upload Files";
+}
+
+<h2>Upload Files</h2>
+
+<div class="mb-3">
+    <a class="btn btn-secondary"
+       asp-controller="Courses"
+       asp-action="Details"
+       asp-route-id="@ViewBag.CourseId">
+        Back to Course
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@ViewBag.CourseTitle</h5>
+
+        <form asp-action="Upload"
+              asp-controller="CourseFiles"
+              asp-route-courseId="@ViewBag.CourseId"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Select files</label>
+                <input type="file" name="files" class="form-control" multiple />
+                <span class="text-danger">@Html.ValidationMessage("files")</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>

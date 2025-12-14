@@ -1,0 +1,77 @@
+﻿@model LearnPrompt.Domain.Entities.Course
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+
+@functions {
+    string FormatBytes(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB" };
+        double len = bytes;
+        int order = 0;
+
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len /= 1024;
+        }
+
+        return $"{len:0.##} {sizes[order]}";
+    }
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@Model.Title</h2>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Description:</strong> @(string.IsNullOrWhiteSpace(Model.Description) ? "-" : Model.Description)</p>
+        <p><strong>Language:</strong> @Model.Language</p>
+        <p><strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+    </div>
+</div>
+
+<hr />
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h4>Files</h4>
+
+    <a class="btn btn-primary"
+       asp-controller="CourseFiles"
+       asp-action="Upload"
+       asp-route-courseId="@Model.Id">
+        Upload Files
+    </a>
+</div>
+
+@if (Model.Files == null || !Model.Files.Any())
+{
+    <div class="alert alert-info mt-3">No files uploaded yet.</div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>File</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Uploaded</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model.Files)
+            {
+                <tr>
+                    <td>@f.FileName</td>
+                    <td>@FormatBytes(f.FileSize)</td>
+                    <td>@(string.IsNullOrWhiteSpace(f.Status) ? "Pending" : f.Status)</td>
+                    <td>@f.UploadedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

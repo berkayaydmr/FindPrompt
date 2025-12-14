@@ -18,6 +18,7 @@ public class CourseRepository : ICourseRepository
     public Task<List<Course>> GetByOwnerAsync(string ownerId)
     {
         return _context.Courses
+            .Include(c => c.Files)
             .Include(c => c.Topics)
             .Where(c => c.OwnerId == ownerId)
             .ToListAsync();
@@ -27,8 +28,10 @@ public class CourseRepository : ICourseRepository
     {
         return _context.Courses
             .Include(c => c.Topics)
+            .Include(c => c.Files)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
+
 
     public async Task AddAsync(Course course)
     {
@@ -39,4 +42,18 @@ public class CourseRepository : ICourseRepository
     {
         return _context.SaveChangesAsync();
     }
+    public async Task AddFileAsync(CourseFile file)
+    {
+        await _context.CourseFiles.AddAsync(file);
+    }
+
+    public Task<List<CourseFile>> GetFilesByCourseIdAsync(int courseId)
+    {
+        return _context.CourseFiles
+            .Where(x => x.CourseId == courseId)
+            .OrderByDescending(x => x.UploadedAt)
+            .ToListAsync();
+    }
+
+
 }

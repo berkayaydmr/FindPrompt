@@ -13,5 +13,8 @@ namespace LearnPrompt.Application.Repositories
         Task<Course?> GetByIdAsync(int id);
         Task AddAsync(Course course);
         Task SaveChangesAsync();
+        Task AddFileAsync(CourseFile file);
+        Task<List<CourseFile>> GetFilesByCourseIdAsync(int courseId);
+
     }
 }

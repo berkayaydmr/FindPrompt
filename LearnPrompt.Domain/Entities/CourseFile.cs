@@ -15,5 +15,6 @@ namespace LearnPrompt.Domain.Entities
         public string StoredFileName { get; set; } = null!;
         public long FileSize { get; set; }
         public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = "Pending";
     }
 }

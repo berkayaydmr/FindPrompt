@@ -8,5 +8,6 @@ public interface ICourseService
     Task<Course?> GetByIdAsync(int id);
     Task CreateCourseAsync(string ownerId, string title, string? description, string language);
     Task AddCourseFileAsync(string ownerId, int courseId, string originalFileName, string storedFileName, long fileSize);
+    Task<CourseFile> DeleteCourseFileAsync(string ownerId, int fileId);
 
 }

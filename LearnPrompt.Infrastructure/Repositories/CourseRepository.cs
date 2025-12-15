@@ -55,5 +55,14 @@ public class CourseRepository : ICourseRepository
             .ToListAsync();
     }
 
+    public Task<CourseFile?> GetFileByIdAsync(int fileId)
+        => _context.CourseFiles.FirstOrDefaultAsync(x => x.Id == fileId);
+
+    public Task RemoveFileAsync(CourseFile file)
+    {
+        _context.CourseFiles.Remove(file);
+        return Task.CompletedTask;
+    }
+
 
 }

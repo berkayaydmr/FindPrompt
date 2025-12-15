@@ -96,4 +96,23 @@ public class CourseFilesController : Controller
 
         return RedirectToAction("Details", "Courses", new { id = courseId });
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrWhiteSpace(userId)) return Challenge();
+
+        var file = await _courseService.DeleteCourseFileAsync(userId, id);
+        var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads", file.CourseId.ToString());
+        var storedPath = Path.Combine(uploadsRoot, file.StoredFileName);
+
+        if (System.IO.File.Exists(storedPath))
+        {
+            System.IO.File.Delete(storedPath);
+        }
+
+        return RedirectToAction("Details", "Courses", new { id = file.CourseId });
+    }
 }

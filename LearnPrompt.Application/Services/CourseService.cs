@@ -1,4 +1,4 @@
-﻿using LearnPrompt.Application.Repositories;
+﻿﻿using LearnPrompt.Application.Repositories;
 using LearnPrompt.Domain.Entities;
 
 namespace LearnPrompt.Application.Services;
@@ -48,6 +48,17 @@ public class CourseService : ICourseService
 
         await _repo.AddFileAsync(file);
         await _repo.SaveChangesAsync();
+    }
+
+    public async Task<CourseFile> DeleteCourseFileAsync(string ownerId, int fileId)
+    {
+        var file = await _repo.GetFileByIdAsync(fileId) ?? throw new Exception("File not found");
+        var course = await _repo.GetByIdAsync(file.CourseId) ?? throw new Exception("Course not found");
+        if (course.OwnerId != ownerId) throw new UnauthorizedAccessException();
+
+        await _repo.RemoveFileAsync(file);
+        await _repo.SaveChangesAsync();
+        return file;
     }
 
 }

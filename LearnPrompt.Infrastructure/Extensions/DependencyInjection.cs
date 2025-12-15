@@ -13,10 +13,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-  
-
         services.AddScoped<ICourseRepository, CourseRepository>();
-
         return services;
     }
 }

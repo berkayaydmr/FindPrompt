@@ -1,37 +1,36 @@
 ﻿@{
-    ViewData["Title"] = "Upload Files";
+    ViewData["Title"] = "Dosya Yükle";
 }
 
-<h2>Upload Files</h2>
+<section class="max-w-3xl space-y-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Dosya yükle</p>
+            <h1 class="text-3xl font-semibold text-slate-900">@ViewBag.CourseTitle</h1>
+        </div>
+        <a class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-indigo-200"
+           asp-controller="Courses"
+           asp-action="Details"
+           asp-route-id="@ViewBag.CourseId">Kursa dön</a>
+    </div>
 
-<div class="mb-3">
-    <a class="btn btn-secondary"
-       asp-controller="Courses"
-       asp-action="Details"
-       asp-route-id="@ViewBag.CourseId">
-        Back to Course
-    </a>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">@ViewBag.CourseTitle</h5>
-
+    <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <form asp-action="Upload"
               asp-controller="CourseFiles"
               asp-route-courseId="@ViewBag.CourseId"
               method="post"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"
+              class="space-y-6">
 
             @Html.AntiForgeryToken()
 
-            <div class="mb-3">
-                <label class="form-label">Select files</label>
-                <input type="file" name="files" class="form-control" multiple />
-                <span class="text-danger">@Html.ValidationMessage("files")</span>
+            <div>
+                <label class="text-sm font-medium text-slate-700">Dosya seç</label>
+                <input type="file" name="files" multiple class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" />
+                <span class="mt-1 block text-sm text-rose-500">@Html.ValidationMessage("files")</span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Upload</button>
+            <button type="submit" class="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500">Yükle</button>
         </form>
     </div>
-</div>
+</section>

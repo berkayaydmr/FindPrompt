@@ -78,3 +78,9 @@ _[Ss]cripts
 
 .DS_Store
 /.vs
+
+# Configuration files with secrets
+appsettings.Development.json
+appsettings.Production.json
+**/appsettings.*.json
+!**/appsettings.json

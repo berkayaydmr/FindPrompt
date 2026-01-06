@@ -1,12 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Web", "LearnPrompt.Web\LearnPrompt.Web.csproj", "{7D1F4ADC-D71B-4350-A874-95DFF8579890}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E3AC1697-6C32-4DED-9647-6E2A0B6D5B34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Infrastructure", "LearnPrompt.Infrastructure\LearnPrompt.Infrastructure.csproj", "{5B5D478E-86DA-4FFE-8D02-6043D6630871}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{8EA789AB-7C47-4E2E-9353-0C3B6B8F9601}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Application", "LearnPrompt.Application\LearnPrompt.Application.csproj", "{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{BF060C5E-1BA6-4C68-B051-1219777084F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Domain", "LearnPrompt.Domain\LearnPrompt.Domain.csproj", "{8C921C57-C607-419A-88AB-C5E91684BF9D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{AB0F52F9-6AE6-48F3-9FD2-93F0EE2CB4C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{8E03BDE8-18AA-4F5E-9AA4-4D110FE3B03E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Web", "src\Presentation\LearnPrompt.Web\LearnPrompt.Web.csproj", "{7D1F4ADC-D71B-4350-A874-95DFF8579890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Infrastructure", "src\Infrastructure\LearnPrompt.Infrastructure\LearnPrompt.Infrastructure.csproj", "{5B5D478E-86DA-4FFE-8D02-6043D6630871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Application", "src\Application\LearnPrompt.Application\LearnPrompt.Application.csproj", "{DDA29EE9-6D20-43A6-BDA5-775882A5E33B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearnPrompt.Domain", "src\Domain\LearnPrompt.Domain\LearnPrompt.Domain.csproj", "{8C921C57-C607-419A-88AB-C5E91684BF9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +40,15 @@ Global
 		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C921C57-C607-419A-88AB-C5E91684BF9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8EA789AB-7C47-4E2E-9353-0C3B6B8F9601} = {E3AC1697-6C32-4DED-9647-6E2A0B6D5B34}
+		{BF060C5E-1BA6-4C68-B051-1219777084F8} = {E3AC1697-6C32-4DED-9647-6E2A0B6D5B34}
+		{AB0F52F9-6AE6-48F3-9FD2-93F0EE2CB4C6} = {E3AC1697-6C32-4DED-9647-6E2A0B6D5B34}
+		{8E03BDE8-18AA-4F5E-9AA4-4D110FE3B03E} = {E3AC1697-6C32-4DED-9647-6E2A0B6D5B34}
+		{7D1F4ADC-D71B-4350-A874-95DFF8579890} = {8EA789AB-7C47-4E2E-9353-0C3B6B8F9601}
+		{5B5D478E-86DA-4FFE-8D02-6043D6630871} = {8E03BDE8-18AA-4F5E-9AA4-4D110FE3B03E}
+		{DDA29EE9-6D20-43A6-BDA5-775882A5E33B} = {BF060C5E-1BA6-4C68-B051-1219777084F8}
+		{8C921C57-C607-419A-88AB-C5E91684BF9D} = {AB0F52F9-6AE6-48F3-9FD2-93F0EE2CB4C6}
 	EndGlobalSection
 EndGlobal

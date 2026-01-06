@@ -11,7 +11,7 @@ namespace LearnPrompt.Domain.Entities
         [Required]
         public string OwnerId { get; set; } = null!;
 
-        public User? Owner { get; set; }
+        public IdentityUser? Owner { get; set; }
 
         [Required, StringLength(100)]
         public string Title { get; set; } = null!;

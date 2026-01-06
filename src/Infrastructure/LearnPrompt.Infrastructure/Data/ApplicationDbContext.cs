@@ -24,6 +24,12 @@ namespace LearnPrompt.Infrastructure.Data
             base.OnModelCreating(builder);
 
             builder.Entity<Course>()
+                .HasOne(c => c.Owner)
+                .WithMany()
+                .HasForeignKey(c => c.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Course>()
                 .HasMany(c => c.Topics)
                 .WithOne(t => t.Course)
                 .HasForeignKey(t => t.CourseId);

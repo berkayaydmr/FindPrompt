@@ -36,7 +36,9 @@ public static class DependencyInjection
             var options = sp.GetRequiredService<IOptions<OpenAIOptions>>().Value;
             if (!string.IsNullOrWhiteSpace(options.Endpoint))
             {
-                client.BaseAddress = new Uri(options.Endpoint);
+                // Ensure endpoint ends with '/' for proper relative URL resolution
+                var endpoint = options.Endpoint.TrimEnd('/') + "/";
+                client.BaseAddress = new Uri(endpoint);
             }
         });
 
@@ -51,7 +53,9 @@ public static class DependencyInjection
             var options = sp.GetRequiredService<IOptions<OpenAIOptions>>().Value;
             if (!string.IsNullOrWhiteSpace(options.Endpoint))
             {
-                client.BaseAddress = new Uri(options.Endpoint);
+                // Ensure endpoint ends with '/' for proper relative URL resolution
+                var endpoint = options.Endpoint.TrimEnd('/') + "/";
+                client.BaseAddress = new Uri(endpoint);
             }
         });
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using LearnPrompt.Domain.Entities;
@@ -18,6 +18,7 @@ namespace LearnPrompt.Infrastructure.Data
         public DbSet<CourseFile> CourseFiles { get; set; } = null!;
         public DbSet<ContentChunk> ContentChunks { get; set; } = null!;
         public DbSet<CourseTopic> CourseTopics { get; set; } = null!;
+        public DbSet<TopicContentChunk> TopicContentChunks { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -76,6 +77,28 @@ namespace LearnPrompt.Infrastructure.Data
 
                 entity.HasIndex(t => new { t.CourseId, t.Title })
                     .IsUnique();
+            });
+
+            builder.Entity<TopicContentChunk>(entity =>
+            {
+                entity.HasKey(tc => new { tc.TopicId, tc.ChunkId });
+
+                entity.HasOne(tc => tc.Topic)
+                    .WithMany(t => t.RelatedChunks)
+                    .HasForeignKey(tc => tc.TopicId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(tc => tc.Chunk)
+                    .WithMany(c => c.RelatedTopics)
+                    .HasForeignKey(tc => tc.ChunkId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(tc => tc.Relevance)
+                    .HasColumnType("REAL")
+                    .HasDefaultValue(1.0f);
+
+                entity.Property(tc => tc.Order)
+                    .HasDefaultValue(0);
             });
         }
     }

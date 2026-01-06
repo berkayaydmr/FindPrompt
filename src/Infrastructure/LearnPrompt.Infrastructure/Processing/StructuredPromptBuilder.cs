@@ -28,11 +28,24 @@ namespace LearnPrompt.Infrastructure.Processing
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var references = await _vectorStore.SearchAsync(
-                request.Course.Id,
-                request.Topic.Title,
-                request.TopK,
-                cancellationToken);
+            // Topic'e bağlı doğrudan chunk'ları getir
+            var directChunks = request.Topic.RelatedChunks
+                .OrderBy(tc => tc.Order)
+                .Select(tc => new VectorSearchResult(tc.Chunk.RawText, tc.Relevance, tc.ChunkId))
+                .ToList();
+            
+            // Ek vector search (kalan slot kadar)
+            var additionalCount = Math.Max(0, request.TopK - directChunks.Count);
+            var vectorResults = additionalCount > 0 
+                ? await _vectorStore.SearchAsync(
+                    request.Course.Id,
+                    request.Topic.Title,
+                    additionalCount,
+                    cancellationToken)
+                : new List<VectorSearchResult>();
+
+            // Birleştir
+            var references = directChunks.Concat(vectorResults).ToList();
 
             var prompt = BuildPromptText(request, references);
             return new PromptResult(

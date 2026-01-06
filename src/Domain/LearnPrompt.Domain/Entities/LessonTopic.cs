@@ -14,6 +14,8 @@ namespace LearnPrompt.Domain.Entities
         public string Title { get; set; } = null!;
         public string? Summary { get; set; }
         public int Order { get; set; }
+        
+        public ICollection<TopicContentChunk> RelatedChunks { get; set; } = new List<TopicContentChunk>();
     }
 }
 

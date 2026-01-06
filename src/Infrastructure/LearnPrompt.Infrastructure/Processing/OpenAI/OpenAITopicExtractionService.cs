@@ -89,7 +89,7 @@ namespace LearnPrompt.Infrastructure.Processing.OpenAI
             userPrompt.AppendLine("Analyze the following course material snippets and propose between 5 and 10 concise study topics.");
             userPrompt.AppendLine("Return a JSON object with a `topics` array. Each array item must contain:");
             userPrompt.AppendLine("{\"title\": string, \"confidence\": number (0-1), \"supportingChunkIndexes\": number[]}.");
-            userPrompt.AppendLine("Titles must be unique, actionable, and under 80 characters.");
+            userPrompt.AppendLine("Titles must be unique, actionable, and under 80 characters and the same language as the content. SO IF THE CONTENT IS IN TURKISH, RESPOND IN TURKISH IF IT IS ENGLISH, RESPOND IN ENGLISH OR WHICH LANGUAGE IS CONTENT RESPONSE AS IT IS.");
             userPrompt.AppendLine();
             userPrompt.AppendLine($"Course Title: {course.Title}");
             if (!string.IsNullOrWhiteSpace(course.Description))

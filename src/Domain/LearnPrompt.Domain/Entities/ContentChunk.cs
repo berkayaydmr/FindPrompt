@@ -13,6 +13,8 @@ namespace LearnPrompt.Domain.Entities
         public int OrderIndex { get; set; }
         public string RawText { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
+        public ICollection<TopicContentChunk> RelatedTopics { get; set; } = new List<TopicContentChunk>();
     }
 }
 

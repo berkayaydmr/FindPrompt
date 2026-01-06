@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using LearnPrompt.Application.Repositories;
 using LearnPrompt.Application.Processing;
 using LearnPrompt.Application.Topics;
@@ -25,11 +25,30 @@ public static class DependencyInjection
         services.AddScoped<ICourseRepository, CourseRepository>();
         services.AddSingleton<IChunkingService, FixedWindowChunkingService>();
         services.AddSingleton<ITextExtractionService, TextExtractionService>();
-        services.AddSingleton<IEmbeddingService, DeterministicHashEmbeddingService>();
-        services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+        services.AddSingleton<IVectorStore, QdrantVectorStore>();
         services.AddScoped<IContentProcessingService, ContentProcessingService>();
         services.AddScoped<IPromptBuilder, StructuredPromptBuilder>();
         services.Configure<OpenAIOptions>(configuration.GetSection(OpenAIOptions.SectionName));
+        services.Configure<QdrantOptions>(configuration.GetSection(QdrantOptions.SectionName));
+
+        // OpenAI Embedding Service
+        services.AddHttpClient<OpenAIEmbeddingService>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<OpenAIOptions>>().Value;
+            if (!string.IsNullOrWhiteSpace(options.Endpoint))
+            {
+                var endpoint = options.Endpoint.TrimEnd('/') + "/";
+                client.BaseAddress = new Uri(endpoint);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(options.ApiKey))
+            {
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {options.ApiKey}");
+            }
+        });
+        
+        services.AddSingleton<IEmbeddingService>(sp => 
+            sp.GetRequiredService<OpenAIEmbeddingService>());
 
         services.AddHttpClient<OpenAITopicExtractionService>((sp, client) =>
         {

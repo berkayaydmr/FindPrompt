@@ -27,6 +27,7 @@ namespace LearnPrompt.Domain.Entities
         public double? Confidence { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public ICollection<TopicContentChunk> RelatedChunks { get; set; } = new List<TopicContentChunk>();
     }
 }
 

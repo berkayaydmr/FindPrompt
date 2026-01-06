@@ -93,3 +93,8 @@ appsettings.Production.json
 *.db
 *.db-shm
 *.db-wal
+
+# Docker and Qdrant
+qdrant_storage/
+docker-compose.override.yml
+

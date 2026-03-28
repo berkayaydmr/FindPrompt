@@ -1,0 +1,169 @@
+@model LearnPrompt.Web.Models.Topics.TopicIndexViewModel
+
+@{
+    ViewData["Title"] = "Konu Başlıkları";
+}
+
+<section class="space-y-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Konu başlıkları</p>
+            <h1 class="text-3xl font-semibold text-slate-900">@Model.CourseTitle</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.CourseDescription))
+            {
+                <p class="mt-2 max-w-3xl text-sm text-slate-600">@Model.CourseDescription</p>
+            }
+        </div>
+        <a class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-indigo-200"
+           asp-controller="Courses"
+           asp-action="Details"
+           asp-route-id="@Model.CourseId">Kursa dön</a>
+    </div>
+
+    @if (TempData["StatusMessage"] is string status)
+    {
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">@status</div>
+    }
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">@error</div>
+    }
+
+    <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <article class="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-semibold text-slate-900">Mevcut başlıklar</h2>
+                    <p class="text-sm text-slate-500">Çalışmak istediğin konuları seç ve dilersen yeni başlık ekle.</p>
+                </div>
+                <form asp-action="Generate" method="post" class="flex gap-2">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="courseId" value="@Model.CourseId" />
+                    <button type="submit"
+                            class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+                            @(Model.HasChunks ? null : "disabled")
+                            title="@(Model.HasChunks ? "Konu başlığı üret" : "Önce içerik yükle")">
+                        Otomatik Üret
+                    </button>
+                </form>
+            </div>
+
+            @if (Model.Topics == null || !Model.Topics.Any())
+            {
+                <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-slate-500">
+                    Henüz konu başlığı bulunmuyor. @(Model.HasChunks ? "Dosyalardan otomatik üretim yapabilir veya manuel başlık ekleyebilirsin." : "Önce dersine içerik yüklemelisin.")
+                </div>
+            }
+            else
+            {
+                <div class="overflow-hidden rounded-2xl border border-slate-200">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <tr>
+                                <th class="px-6 py-3">Başlık</th>
+                                <th class="px-6 py-3">Kaynak</th>
+                                <th class="px-6 py-3">Seçim</th>
+                                <th class="px-6 py-3">Prompt</th>
+                                <th class="px-6 py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 bg-white">
+                        @foreach (var topic in Model.Topics)
+                        {
+                            <tr class="transition hover:bg-slate-50">
+                                <td class="px-6 py-4">
+                                    <div class="font-medium text-slate-900">@topic.Title</div>
+                                    @if (topic.Confidence is double confidence)
+                                    {
+                                        <div class="mt-1 text-xs text-slate-500">Güven: @confidence:P0</div>
+                                    }
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="rounded-full border px-3 py-1 text-xs font-semibold @(topic.IsManual ? "border-sky-200 bg-sky-50 text-sky-700" : "border-slate-200 bg-slate-50 text-slate-600")">
+                                        @(topic.IsManual ? "Manuel" : "Otomatik")
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <form asp-action="ToggleSelection" method="post" class="inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="courseId" value="@Model.CourseId" />
+                                        <input type="hidden" name="topicId" value="@topic.Id" />
+                                        <input type="hidden" name="isSelected" value="@(topic.IsSelected ? "false" : "true")" />
+                                        <button type="submit"
+                                                class="rounded-lg border px-3 py-1 text-xs font-semibold @(topic.IsSelected ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-slate-200 bg-white text-slate-600")">
+                                            @(topic.IsSelected ? "Seçildi" : "Seç")
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @{
+                                        var promptDisabled = !Model.HasChunks || !topic.IsSelected;
+                                    }
+                                    @if (promptDisabled)
+                                    {
+                                        <span class="inline-flex items-center justify-center rounded-lg border border-dashed border-slate-200 px-3 py-1 text-xs text-slate-300">
+                                            Görüntüle
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-200 px-3 py-1 text-xs font-semibold text-indigo-600 transition hover:border-indigo-300 hover:text-indigo-700"
+                                           asp-controller="Prompts"
+                                           asp-action="Show"
+                                           asp-route-courseId="@Model.CourseId"
+                                           asp-route-topicId="@topic.Id">
+                                            Görüntüle
+                                        </a>
+                                    }
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    @if (topic.IsManual)
+                                    {
+                                        <form asp-action="Delete"
+                                              method="post"
+                                              onsubmit="return confirm('Konu başlığını silmek istediğine emin misin?');"
+                                              class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="courseId" value="@Model.CourseId" />
+                                            <input type="hidden" name="topicId" value="@topic.Id" />
+                                            <button type="submit" class="text-xs font-semibold text-rose-600 hover:text-rose-500">Sil</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </article>
+
+        <aside class="space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <h3 class="text-lg font-semibold text-slate-900">Manuel konu ekle</h3>
+                <p class="mt-1 text-sm text-slate-500">Kendi belirlediğin başlıkları ekleyebilir ve seçebilirsin.</p>
+            </div>
+            <form asp-action="Create" method="post" class="space-y-4">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="courseId" value="@Model.CourseId" />
+                <div>
+                    <label class="text-sm font-medium text-slate-700" for="Title">Başlık</label>
+                    <input type="text"
+                           id="Title"
+                           name="title"
+                           maxlength="200"
+                           required
+                           class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" />
+                </div>
+                <button type="submit" class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-700">
+                    Ekle
+                </button>
+            </form>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+                <p class="font-semibold text-slate-700">İpucu</p>
+                <p class="mt-1">Otomatik başlıklar yalnızca dosya içerikleri yüklendiyse üretilebilir. Manuel başlıklar her zaman düzenlenebilir ve silinebilir.</p>
+            </div>
+        </aside>
+    </div>
+</section>
+

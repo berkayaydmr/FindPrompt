@@ -1,0 +1,145 @@
+@model LearnPrompt.Web.Models.Prompts.PromptViewModel
+@{
+    ViewData["Title"] = "Kişisel Çalışma Promptu";
+}
+
+<section class="space-y-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Kişisel çalışma planı</p>
+            <h1 class="text-3xl font-semibold text-slate-900">@Model.TopicTitle</h1>
+            <p class="mt-1 text-sm text-slate-600">
+                @Model.CourseTitle
+                @if (!string.IsNullOrWhiteSpace(Model.CourseDescription))
+                {
+                    <span class="text-slate-400">&mdash; @Model.CourseDescription</span>
+                }
+            </p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-slate-400">Kaynak: @Model.TopicSource</p>
+        </div>
+        <a class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-indigo-200"
+           asp-controller="Topics"
+           asp-action="Index"
+           asp-route-courseId="@Model.CourseId">
+            Konu listesine dön
+        </a>
+    </div>
+
+    @if (TempData["StatusMessage"] is string status)
+    {
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            @status
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            @error
+        </div>
+    }
+
+    <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <article class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm space-y-4">
+            <div>
+                <h2 class="text-xl font-semibold text-slate-900">Hazırlanmış içerik</h2>
+                <p class="mt-1 text-sm text-slate-500">Bu metni doğrudan kopyalayabilir veya kendi üslubuna göre düzenleyebilirsin.</p>
+            </div>
+            <form asp-action="Execute"
+                  method="post"
+                  class="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="courseId" value="@Model.CourseId" />
+                <input type="hidden" name="topicId" value="@Model.TopicId" />
+                <input type="hidden" name="top" value="@(Math.Max(Model.References?.Count ?? 6, 1))" />
+                <div class="text-slate-600">
+                    LLM'den örnek bir ders akışı oluştur.
+                </div>
+                <div class="ml-auto">
+                    <button type="submit"
+                            class="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-500">
+                        Yanıt Oluştur
+                    </button>
+                </div>
+            </form>
+            <div class="relative">
+                <button type="button"
+                        class="absolute right-4 top-4 rounded-md border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                        onclick="copyPrompt()">
+                    Kopyala
+                </button>
+                <textarea id="promptContent"
+                          class="h-80 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-800"
+                          readonly>@Model.Prompt</textarea>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.GeneratedResponse))
+            {
+                <div class="space-y-3 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-semibold text-indigo-800">LLM Yanıtı</h3>
+                        <span class="text-xs uppercase tracking-wide text-indigo-500">Taslak</span>
+                    </div>
+                    <div class="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-lg bg-white px-4 py-3 text-sm leading-relaxed text-slate-800 shadow-inner">
+                        @Model.GeneratedResponse
+                    </div>
+                </div>
+            }
+        </article>
+
+        <aside class="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <h3 class="text-lg font-semibold text-slate-900">Önerilen içerik parçaları</h3>
+                <p class="mt-1 text-sm text-slate-500">
+                    Model bu başlık için @Model.References.Count içerik parçası kullandı. Ek bağlam gerektiğinde aşağıdaki notları inceleyebilirsin.
+                </p>
+            </div>
+            @if (Model.References == null || !Model.References.Any())
+            {
+                <p class="text-sm text-slate-500">
+                    Bu başlık için ilgili içerik bulunamadı. Ders dokümanlarını gözden geçirip gerekirse yeni içerik yükleyebilirsin.
+                </p>
+            }
+            else
+            {
+                <ol class="list-decimal space-y-4 pl-6 text-sm text-slate-700">
+                    @for (var i = 0; i < Model.References.Count; i++)
+                    {
+                        var reference = Model.References[i];
+                        <li>
+                            <div class="mb-1 text-xs uppercase tracking-wide text-slate-400">Güven: @reference.Score</div>
+                            <p class="rounded-md bg-slate-50 p-3">@reference.RawText</p>
+                        </li>
+                    }
+                </ol>
+            }
+        </aside>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function copyPrompt() {
+            const textarea = document.getElementById('promptContent');
+            if (!navigator.clipboard) {
+                textarea.select();
+                document.execCommand('copy');
+                return;
+            }
+
+            navigator.clipboard.writeText(textarea.value)
+                .then(() => {
+                    const originalText = 'Kopyala';
+                    const button = document.querySelector('[onclick="copyPrompt()"]');
+                    if (button) {
+                        button.textContent = 'Kopyalandı!';
+                        setTimeout(() => button.textContent = originalText, 2000);
+                    }
+                })
+                .catch(() => {
+                    textarea.select();
+                    document.execCommand('copy');
+                });
+        }
+    </script>
+}
+
